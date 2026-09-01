@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { ArrowDown, Sparkles, MoveRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useSettings } from '@/components/SettingsProvider';
 
 interface HeroV5Props {
    banners: any[];
@@ -13,6 +14,7 @@ interface HeroV5Props {
 
 export default function HeroV5({ banners }: HeroV5Props) {
    const { t } = useLanguage();
+   const settings = useSettings();
    const banner = banners?.[0] || {
       title: 'Pure Intentions',
       subtitle: 'THE ART OF MINIMALIST COMMERCE',
