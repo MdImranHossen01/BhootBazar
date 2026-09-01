@@ -23,9 +23,11 @@ import {
 import { MobileMenu } from '@/components/layout/MobileMenu';
 import { MobileNavbar } from '@/components/layout/MobileNavbar';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useSettings } from '@/components/SettingsProvider';
 
 export default function NavbarV3() {
   const { t } = useLanguage();
+  const settings = useSettings();
   const router = useRouter();
   const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
