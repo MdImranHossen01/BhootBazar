@@ -1,4 +1,4 @@
-name: Deploy CDIDoorInd to DigitalOcean
+name: Deploy BhootBazar to DigitalOcean
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
 
 env:
   DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-  DOCKER_IMAGE_NAME: cdidoorind-app
-  DOCKER_IMAGE_TAG: ${{ secrets.DOCKER_HUB_USERNAME }}/cdidoorind-app:latest
+  DOCKER_IMAGE_NAME: bhootbazar-app
+  DOCKER_IMAGE_TAG: ${{ secrets.DOCKER_HUB_USERNAME }}/bhootbazar-app:latest
 
 jobs:
   build-and-push:
@@ -47,8 +47,8 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            mkdir -p ~/cdidoorind
-            cd ~/cdidoorind
+            mkdir -p ~/bhootbazar
+            cd ~/bhootbazar
 
             cat << 'EOF' > .env.local
             ${{ secrets.ENV_FILE }}
@@ -58,10 +58,10 @@ jobs:
             services:
               web:
                 image: ${{ env.DOCKER_IMAGE_TAG }}
-                container_name: cdidoorind-app
+                container_name: bhootbazar-app
                 restart: unless-stopped
                 ports:
-                  - "3002:3000"
+                  - "3004:3000"
                 env_file:
                   - .env.local
                 deploy:

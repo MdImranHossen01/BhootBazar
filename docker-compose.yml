@@ -1,10 +1,10 @@
 services:
   web:
     image: ${DOCKER_IMAGE_TAG}
-    container_name: cdidoorind-app
+    container_name: bhootbazar-app
     restart: unless-stopped
     ports:
-      - "3002:3000"
+      - "3004:3000"
     env_file:
       - .env.local
     deploy:
