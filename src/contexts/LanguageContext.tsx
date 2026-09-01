@@ -19,7 +19,7 @@ const translations = {
     "store.home.featured_collections": "Featured Collections",
     "store.home.flash_sale": "Flash Sale",
 
-    "store.footer.description": "Your ultimate destination for quality doors and hardware. We provide the best products with top-notch customer service.",
+    "store.footer.description": "Your premier lifestyle & multi-category destination. We deliver top quality fashion, electronics, books, beauty, and gourmet essentials across Bangladesh.",
     "store.footer.shop_all": "Shop All",
     "store.footer.new_arrivals": "New Arrivals",
     "store.footer.order_tracking": "Order Tracking",
@@ -1723,7 +1723,7 @@ const translations = {
     "store.home.featured_collections": "ফিচার্ড কালেকশন",
     "store.home.flash_sale": "ফ্ল্যাশ সেল",
 
-    "store.footer.description": "উন্নত মানের দরজা এবং হার্ডওয়্যারের জন্য আপনার বিশ্বস্ত প্রতিষ্ঠান। আমরা সেরা পণ্যের পাশাপাশি নিশ্চিত করি সর্বোচ্চ কাস্টমার সার্ভিস।",
+    "store.footer.description": "সেরা কোয়ালিটির ফ্যাশন, গ্যাজেট, বই, অর্গানিক স্কিনকেয়ার ও নিত্যপ্রয়োজনীয় পণ্যের বিশ্বস্ত প্ল্যাটফর্ম। সারা বাংলাদেশে দ্রুত হোম ডেলিভারি ও শতভাগ গ্রাহক সন্তুষ্টি আমাদের অঙ্গীকার।",
     "store.footer.shop_all": "সব প্রোডাক্ট",
     "store.footer.new_arrivals": "নতুন কালেকশন",
     "store.footer.order_tracking": "অর্ডার ট্র্যাকিং",

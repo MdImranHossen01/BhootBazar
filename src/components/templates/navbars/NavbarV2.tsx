@@ -194,8 +194,8 @@ export default function NavbarV2() {
             />
 
             <Link href="/" className={`text-2xl md:text-3xl font-black tracking-tighter hover:scale-105 transition-all flex items-center gap-2 group ${!isHomePage || isScrolled ? 'text-foreground' : 'text-white'}`}>
-              <Image src="/logo.webp" width={40} height={40} alt="Omor Auto Corner Logo" className="object-contain" />
-              {settings?.brandName || 'Omor Auto Corner'}
+              <Image src="/logo.webp" width={40} height={40} alt={`${settings?.brandName || process.env.NEXT_PUBLIC_STORE_NAME || 'Store'} Logo`} className="object-contain" />
+              {settings?.brandName || process.env.NEXT_PUBLIC_STORE_NAME || 'Store'}
             </Link>
           </div>
 

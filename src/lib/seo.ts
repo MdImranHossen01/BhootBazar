@@ -12,18 +12,18 @@ export async function generateOrganizationSchema(settings: any) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: settings.brandName || 'চিটাগাং ডোর',
+    name: settings?.brandName || process.env.NEXT_PUBLIC_STORE_NAME || 'Store',
     url: baseUrl,
-    logo: settings.logo,
+    logo: settings?.logo,
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: settings.contact?.phone,
+      telephone: settings?.contact?.phone,
       contactType: 'customer service',
-      email: settings.contact?.email,
+      email: settings?.contact?.email,
     },
     address: {
       '@type': 'PostalAddress',
-      streetAddress: settings.contact?.address,
+      streetAddress: settings?.contact?.address,
     },
   };
 }
@@ -41,7 +41,7 @@ export async function generateProductSchema(product: any) {
     sku: product.sku,
     brand: {
       '@type': 'Brand',
-      name: 'চিটাগাং ডোর',
+      name: product.brand || process.env.NEXT_PUBLIC_STORE_NAME || 'Store',
     },
     offers: {
       '@type': 'Offer',
@@ -78,7 +78,7 @@ export async function generateBlogSchema(blog: any) {
     dateModified: blog.updatedAt || blog.createdAt,
     author: {
       '@type': 'Organization',
-      name: 'চিটাগাং ডোর',
+      name: blog.author?.name || process.env.NEXT_PUBLIC_STORE_NAME || 'Store',
     },
     description: blog.metaDescription || blog.title,
     url: `${baseUrl}/blog/${blog.slug}`,

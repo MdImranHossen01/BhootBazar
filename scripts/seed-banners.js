@@ -8,24 +8,20 @@ let mongodbUri = '';
 
 if (fs.existsSync(envPath)) {
   let envContent = fs.readFileSync(envPath, 'utf8');
-  // Strip UTF-8 BOM if present
   if (envContent.charCodeAt(0) === 0xFEFF) envContent = envContent.slice(1);
-  // Handle both LF and CRLF line endings
   const lines = envContent.split(/\r?\n/);
   for (const line of lines) {
     if (line.startsWith('MONGODB_URI=')) {
-      mongodbUri = line.substring('MONGODB_URI='.length).trim().replace(/['"]/g, '');
+      mongodbUri = line.substring('MONGODB_URI='.length).trim().replace(/['"\r]/g, '');
       break;
     }
   }
 }
 
 if (!mongodbUri) {
-  console.error('Could not read MONGODB_URI from .env.local');
+  console.error('❌ Could not read MONGODB_URI from .env.local');
   process.exit(1);
 }
-
-console.log('Using URI starting with:', mongodbUri.substring(0, 50) + '...');
 
 console.log('Connecting to MongoDB...');
 
@@ -48,57 +44,57 @@ const Banner = mongoose.models.Banner || mongoose.model('Banner', BannerSchema);
 
 const banners = [
   {
-    title: 'Premium Solid Wood Doors',
-    image: '/assets/images/Banner/solid-wood-door-banner.webp',
-    link: 'https://www.cdidoorind.com/shop',
+    title: 'Elevate Your Daily Lifestyle & Fashion',
+    image: '/assets/images/Banner/fashion-lifestyle-banner.webp',
+    link: 'https://www.bhootbazar.com/shop',
     primaryBtnText: 'Shop Now',
-    primaryBtnLink: 'https://www.cdidoorind.com/shop',
+    primaryBtnLink: 'https://www.bhootbazar.com/shop',
     secondaryBtnText: 'Contact Us',
-    secondaryBtnLink: 'https://wa.me/8801711005231',
+    secondaryBtnLink: 'https://wa.me/8801521100827',
     order: 1,
     isActive: true,
   },
   {
-    title: 'Modern Flush Doors',
-    image: '/assets/images/Banner/flush-door-banner.webp',
-    link: 'https://www.cdidoorind.com/shop',
+    title: 'Next-Gen Smart Electronics & Security',
+    image: '/assets/images/Banner/electronics-security-banner.webp',
+    link: 'https://www.bhootbazar.com/shop',
     primaryBtnText: 'Shop Now',
-    primaryBtnLink: 'https://www.cdidoorind.com/shop',
+    primaryBtnLink: 'https://www.bhootbazar.com/shop',
     secondaryBtnText: 'Contact Us',
-    secondaryBtnLink: 'https://wa.me/8801711005231',
+    secondaryBtnLink: 'https://wa.me/8801521100827',
     order: 2,
     isActive: true,
   },
   {
-    title: 'Classic Panelled Doors',
-    image: '/assets/images/Banner/panelled-door-banner.webp',
-    link: 'https://www.cdidoorind.com/shop',
+    title: 'Pure Botanical Skincare & Wellness',
+    image: '/assets/images/Banner/beauty-wellness-banner.webp',
+    link: 'https://www.bhootbazar.com/shop',
     primaryBtnText: 'Shop Now',
-    primaryBtnLink: 'https://www.cdidoorind.com/shop',
+    primaryBtnLink: 'https://www.bhootbazar.com/shop',
     secondaryBtnText: 'Contact Us',
-    secondaryBtnLink: 'https://wa.me/8801711005231',
+    secondaryBtnLink: 'https://wa.me/8801521100827',
     order: 3,
     isActive: true,
   },
   {
-    title: 'Luxury Carved & Designer Doors',
-    image: '/assets/images/Banner/carved-door-banner.webp',
-    link: 'https://www.cdidoorind.com/shop',
+    title: 'Farm-Fresh Grocery & Artisanal Bakery',
+    image: '/assets/images/Banner/grocery-bakery-banner.webp',
+    link: 'https://www.bhootbazar.com/shop',
     primaryBtnText: 'Shop Now',
-    primaryBtnLink: 'https://www.cdidoorind.com/shop',
+    primaryBtnLink: 'https://www.bhootbazar.com/shop',
     secondaryBtnText: 'Contact Us',
-    secondaryBtnLink: 'https://wa.me/8801711005231',
+    secondaryBtnLink: 'https://wa.me/8801521100827',
     order: 4,
     isActive: true,
   },
   {
-    title: 'Contemporary Laminated Doors',
-    image: '/assets/images/Banner/laminated-door-banner.webp',
-    link: 'https://www.cdidoorind.com/shop',
+    title: 'Nurture Your Mind & Living Space',
+    image: '/assets/images/Banner/books-tree-banner.webp',
+    link: 'https://www.bhootbazar.com/shop',
     primaryBtnText: 'Shop Now',
-    primaryBtnLink: 'https://www.cdidoorind.com/shop',
+    primaryBtnLink: 'https://www.bhootbazar.com/shop',
     secondaryBtnText: 'Contact Us',
-    secondaryBtnLink: 'https://wa.me/8801711005231',
+    secondaryBtnLink: 'https://wa.me/8801521100827',
     order: 5,
     isActive: true,
   },
@@ -107,24 +103,24 @@ const banners = [
 async function seed() {
   try {
     await mongoose.connect(mongodbUri);
-    console.log('Connected to MongoDB successfully.');
+    console.log('✅ Connected to MongoDB successfully.');
 
     // Clear existing banners
     const deleteResult = await Banner.deleteMany({});
-    console.log(`Cleared ${deleteResult.deletedCount} existing banners.`);
+    console.log(`🧹 Cleared ${deleteResult.deletedCount} existing banners.`);
 
     // Insert new banners
     const insertResult = await Banner.insertMany(banners);
-    console.log(`Seeded ${insertResult.length} banners successfully:`);
+    console.log(`🎉 Seeded ${insertResult.length} banners successfully:`);
     insertResult.forEach((b, i) => {
       console.log(`[Banner ${i + 1}] Title: "${b.title}", Image: "${b.image}"`);
     });
 
   } catch (error) {
-    console.error('Seeding error:', error);
+    console.error('❌ Seeding error:', error);
   } finally {
     await mongoose.disconnect();
-    console.log('Disconnected from MongoDB.');
+    console.log('🔌 Disconnected from MongoDB.');
     process.exit(0);
   }
 }

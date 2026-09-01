@@ -114,8 +114,8 @@ export default function FooterV2() {
           {/* Brand Essence */}
           <div className="lg:col-span-4 space-y-6 flex flex-col items-center lg:items-start">
             <Link href="/" className="text-2xl md:text-3xl font-black tracking-tighter hover:scale-105 transition-all flex items-center gap-2 group text-foreground">
-              <Image src="/logo.webp" width={40} height={40} alt="Omor Auto Corner Logo" className="object-contain" />
-              {settings?.brandName || 'Omor Auto Corner'}
+              <Image src="/logo.webp" width={40} height={40} alt={`${settings?.brandName || process.env.NEXT_PUBLIC_STORE_NAME || 'Store'} Logo`} className="object-contain" />
+              {settings?.brandName || process.env.NEXT_PUBLIC_STORE_NAME || 'Store'}
             </Link>
             <div className="mt-1 mb-2">
               <LanguageToggle />
@@ -193,7 +193,7 @@ export default function FooterV2() {
 
         {/* Bottom Bar - Reduced Padding & Smart Layout */}
         <div className="pt-6 border-t border-muted flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">
-          <p className="text-center md:text-left">© {currentYear} {settings?.brandName || 'Omor Auto Corner'}. {t('store.footer.all_rights_reserved')}</p>
+          <p className="text-center md:text-left">© {currentYear} {settings?.brandName || process.env.NEXT_PUBLIC_STORE_NAME || 'Store'}. {t('store.footer.all_rights_reserved')}</p>
           <div className="flex items-center gap-4">
             <DeveloperLogo className="opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all scale-90 md:scale-100" />
           </div>

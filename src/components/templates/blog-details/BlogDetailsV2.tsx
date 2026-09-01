@@ -76,7 +76,7 @@ export default function BlogDetailsV2({ blog, readingTime }: BlogDetailsV2Props)
             </div>
             <div className="flex flex-col">
               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('store.blog.words_by') || 'Words by'}</span>
-              <span className="text-sm font-bold">{t('store.blog.author_name') || 'Omor Auto Corner Editorial'}</span>
+              <span className="text-sm font-bold">{t('store.blog.author_name') || `${process.env.NEXT_PUBLIC_STORE_NAME || 'Store'} Editorial`}</span>
             </div>
           </div>
         </header>

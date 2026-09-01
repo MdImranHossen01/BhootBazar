@@ -47,7 +47,7 @@ export default function FooterV5() {
               <Sparkles className="h-4 w-4 fill-primary" /> The Artistic Conclusion
             </div>
             <h2 className="text-7xl md:text-[15rem] font-black tracking-tighter leading-none uppercase">
-              Omor Auto Corner.
+              {settings?.brandName || process.env.NEXT_PUBLIC_STORE_NAME || 'Store'}
             </h2>
             <div className="flex justify-center mt-4">
               <LanguageToggle />
@@ -101,12 +101,11 @@ export default function FooterV5() {
 
           <div className="text-center space-y-4">
             <div className="text-[10px] font-black uppercase tracking-[0.4em] text-neutral-400">Architecture by</div>
-            <span className="text-2xl font-black uppercase tracking-tighter">Omor Auto Corner Atelier</span>
+            <span className="text-2xl font-black uppercase tracking-tighter">{settings?.brandName || process.env.NEXT_PUBLIC_STORE_NAME || 'Store'} Atelier</span>
           </div>
-
-          <div className="flex flex-col items-end gap-6">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400 text-right">
-              © {currentYear} {settings?.brandName || 'Omor Auto Corner'}. {t('store.footer.all_rights_reserved')}
+          <div className="flex flex-col md:flex-row items-center gap-8 text-[11px] font-bold tracking-widest uppercase text-neutral-400">
+            <p>
+              © {currentYear} {settings?.brandName || process.env.NEXT_PUBLIC_STORE_NAME || 'Store'}. {t('store.footer.all_rights_reserved')}
             </p>
             <DeveloperLogo className="opacity-40 grayscale hover:grayscale-0 hover:opacity-100" />
           </div>

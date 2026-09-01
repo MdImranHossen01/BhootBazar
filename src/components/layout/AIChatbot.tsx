@@ -61,8 +61,9 @@ export function AIChatbot() {
 
     return parts.length > 0 ? parts : content;
   };
+  const storeName = process.env.NEXT_PUBLIC_STORE_NAME || 'Store';
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'হ্যালো! আমি চিটাগাং ডোর এর এআই অ্যাসিস্ট্যান্ট। আজ আপনাকে কীভাবে সাহায্য করতে পারি?' },
+    { role: 'assistant', content: `Hello! I am ${storeName} AI Assistant. How can I help you today?` },
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -148,7 +149,7 @@ export function AIChatbot() {
                   <Bot className="size-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm">চিটাগাং ডোর এআই</h3>
+                  <h3 className="font-bold text-sm">{storeName} AI</h3>
                   <p className="text-[10px] text-primary-foreground/70">Always active for you</p>
                 </div>
               </div>

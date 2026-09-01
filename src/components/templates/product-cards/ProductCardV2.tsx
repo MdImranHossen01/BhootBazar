@@ -195,7 +195,7 @@ export default function ProductCardV2({ product: initialProduct, isFlashSale }: 
   };
 
   const mainCategory = product.categories && product.categories.length > 0 ? product.categories[0] : null;
-  const categoryName = mainCategory?.name || 'OMOR AUTO CORNER';
+  const categoryName = mainCategory?.name || process.env.NEXT_PUBLIC_STORE_NAME || 'Store';
 
   return (
     <div className="group relative flex flex-col bg-background rounded-md border border-border/60 overflow-hidden transition-all duration-300 hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] h-full">

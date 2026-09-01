@@ -146,14 +146,14 @@ export default function BlogDetailsV4({ blog, readingTime }: BlogDetailsV4Props)
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 rounded-full bg-neutral-100 dark:bg-neutral-900 p-1 relative overflow-hidden">
                 <Image
-                  src={blog.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(blog.author?.name || 'Omor Auto Corner')}`}
+                  src={blog.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(blog.author?.name || process.env.NEXT_PUBLIC_STORE_NAME || 'Store')}`}
                   alt="Author"
                   fill
                   className="rounded-full object-cover"
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-xs font-black uppercase tracking-widest">{blog.author?.name || t('store.blog.author_name') || 'Omor Auto Corner Curators'}</span>
+                <span className="text-xs font-black uppercase tracking-widest">{blog.author?.name || t('store.blog.author_name') || `${process.env.NEXT_PUBLIC_STORE_NAME || 'Store'} Curators`}</span>
                 <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{t('store.blog.design_expert') || 'Design Narrative Expert'}</span>
               </div>
             </div>

@@ -15,28 +15,28 @@ const fallbackReviews = [
   {
     name: "Ariful Islam",
     role: "Verified Buyer",
-    content: "এখান থেকে ঘরের জন্য সেগুন কাঠের দরজা নিয়েছিলাম। কাঠের সিজনিং চমৎকার এবং নকশা নিখুঁত হয়েছে। অনলাইন অর্ডারে প্রথমে কিছুটা চিন্তিত ছিলাম, কিন্তু তাদের ডেলিভারি ও কাজের মান আমায় সন্তুষ্ট করেছে।",
+    content: "Ordered smart gadgets and lifestyle accessories from Bhoot Bazar. The build quality exceeded my expectations and the delivery was super fast within Dhaka. Highly recommended!",
     image: "https://i.pravatar.cc/80?u=1",
     rating: 5
   },
   {
     name: "Sadia Afrin",
     role: "Regular Customer",
-    content: "দারুণ কাস্টমার সার্ভিস! সঠিক মাপ ও কাঠের ধরন বেছে নিতে তারা অনেক সাহায্য করেছেন। চেকআউট থেকে শুরু করে সঠিক সময়ে বাড়িতে এসে দরজা পৌঁছে দেওয়া—পুরো প্রক্রিয়াটি খুব সহজ ছিল।",
+    content: "Fantastic customer experience! The organic skincare products are 100% authentic and made a visible difference. The checkout process was smooth and hassle-free.",
     image: "https://i.pravatar.cc/80?u=2",
     rating: 5
   },
   {
     name: "Tanvir Ahmed",
     role: "Verified Buyer",
-    content: "আমি তাদের গামারি কাঠের ল্যামিনেটেড দরজা অর্ডার করেছিলাম। দরজার ফিনিশিং এবং পলিশের কাজ অসাধারণ। ট্রান্সপোর্টে যাতে কোনো ক্ষতি না হয় সেজন্য প্যাকেজিং খুবই মজবুত ছিল।",
+    content: "Bought a set of rare collector books and indoor bonsai pots. Everything arrived securely packed without a single scratch. Truly a reliable lifestyle store!",
     image: "https://i.pravatar.cc/80?u=3",
     rating: 5
   },
   {
     name: "Nusrat Jahan",
     role: "Verified Buyer",
-    content: "বাজারে যাচাই করে দেখেছি, অন্যান্য দোকানের তুলনায় এখানে কাঠের মান ও দামের সামঞ্জস্য খুবই ভালো। আমাদের নতুন ফ্লাটের সবকটি দরজা এখান থেকেই বানিয়েছি এবং সবাই ডিজাইনগুলোর প্রশংসা করছে।",
+    content: "The artisanal bakery treats and organic groceries were fresh and delicious. Customer support on WhatsApp answered all my queries within minutes.",
     image: "https://i.pravatar.cc/80?u=4",
     rating: 5
   }

@@ -2,102 +2,105 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 
-// Read .env.local file to get MONGODB_URI
+// ── ENV PARSING ────────────────────────────────────────────
 const envPath = path.join(__dirname, '../.env.local');
 let mongodbUri = '';
 
 if (fs.existsSync(envPath)) {
   let envContent = fs.readFileSync(envPath, 'utf8');
-  // Strip UTF-8 BOM if present
   if (envContent.charCodeAt(0) === 0xFEFF) envContent = envContent.slice(1);
-  // Handle both LF and CRLF line endings
   const lines = envContent.split(/\r?\n/);
   for (const line of lines) {
     if (line.startsWith('MONGODB_URI=')) {
-      mongodbUri = line.substring('MONGODB_URI='.length).trim().replace(/['"]|\r/g, '');
+      mongodbUri = line.substring('MONGODB_URI='.length).trim().replace(/['"\r]/g, '');
       break;
     }
   }
 }
 
 if (!mongodbUri) {
-  console.error('Could not read MONGODB_URI from .env.local');
+  console.error('❌ Could not read MONGODB_URI from .env.local');
   process.exit(1);
 }
-
-console.log('Using URI starting with:', mongodbUri.substring(0, 50) + '...');
-
-console.log('Connecting to MongoDB...');
 
 const CategorySchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    slug: { type: String, unique: true },
+    slug: { type: String },
     image: { type: String },
     parentCategory: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true }
+  { timestamps: true, collection: 'categories' }
 );
 
 const Category = mongoose.models.Category || mongoose.model('Category', CategorySchema);
 
-const categories = [
+const categoriesToSeed = [
   {
-    name: 'লৌহা কাঠের চৌকাঠ',
-    slug: 'flush-doors',
-    image: '/assets/images/cagetory/cat-flush-door.webp',
+    name: 'Fashion & Lifestyle',
+    slug: 'fashion-lifestyle',
+    image: '/assets/images/cagetory/fashion-lifestyle.webp',
     isActive: true,
   },
   {
-    name: 'মেহগনি কাঠের দরজা',
-    slug: 'laminated-doors',
-    image: '/assets/images/cagetory/cat-laminated-door.webp',
+    name: 'Health & Beauty Care',
+    slug: 'health-beauty-care',
+    image: '/assets/images/cagetory/health-beauty-care.webp',
     isActive: true,
   },
   {
-    name: 'গামারী কাঠের দরজা',
-    slug: 'panelled-doors',
-    image: '/assets/images/cagetory/cat-panelled-door.webp',
+    name: 'Books & Tree',
+    slug: 'books-tree',
+    image: '/assets/images/cagetory/books-tree.webp',
     isActive: true,
   },
   {
-    name: 'সেগুন কাঠের দরজা',
-    slug: 'carved-designer-doors',
-    image: '/assets/images/cagetory/cat-carved-designer-door.webp',
+    name: 'Electric & Electronics Security',
+    slug: 'electric-electronics-security',
+    image: '/assets/images/cagetory/electric-electronics-security.webp',
     isActive: true,
   },
   {
-    name: 'চাপালিশ কাঠের দরজা',
-    slug: 'solid-wood-doors',
-    image: '/assets/images/cagetory/cat-solid-wood-door.webp',
+    name: 'Grocery Food & Bakery',
+    slug: 'grocery-food-bakery',
+    image: '/assets/images/cagetory/grocery-food-bakery.webp',
     isActive: true,
   },
 ];
 
-async function seed() {
+async function seedCategories() {
   try {
+    console.log('Connecting to MongoDB...');
     await mongoose.connect(mongodbUri);
-    console.log('Connected to MongoDB successfully.');
+    console.log('✅ Connected successfully to MongoDB.');
 
-    // Clear existing categories
-    const deleteResult = await Category.deleteMany({});
-    console.log(`Cleared ${deleteResult.deletedCount} existing categories.`);
+    for (const cat of categoriesToSeed) {
+      const existing = await Category.findOne({ slug: cat.slug });
+      if (existing) {
+        existing.name = cat.name;
+        existing.image = cat.image;
+        existing.isActive = true;
+        await existing.save();
+        console.log(`🔄 Updated category: ${cat.name} (${cat.slug})`);
+      } else {
+        await Category.create(cat);
+        console.log(`✨ Created category: ${cat.name} (${cat.slug})`);
+      }
+    }
 
-    // Insert new categories
-    const insertResult = await Category.insertMany(categories);
-    console.log(`Seeded ${insertResult.length} categories successfully:`);
-    insertResult.forEach((c, i) => {
-      console.log(`[Category ${i + 1}] Name: "${c.name}", Slug: "${c.slug}", Image: "${c.image}"`);
+    const allCategories = await Category.find({});
+    console.log(`\n🎉 Total categories in database: ${allCategories.length}`);
+    allCategories.forEach((c, idx) => {
+      console.log(`${idx + 1}. ${c.name} -> ${c.image}`);
     });
-
   } catch (error) {
-    console.error('Seeding error:', error);
+    console.error('❌ Error during category seeding:', error);
   } finally {
     await mongoose.disconnect();
-    console.log('Disconnected from MongoDB.');
+    console.log('🔌 Disconnected from MongoDB.');
     process.exit(0);
   }
 }
 
-seed();
+seedCategories();

@@ -27,7 +27,8 @@ export default async function PublicLayout({ children }: { children: React.React
   // Only show blocker if expired and NOT a super admin
   const showBlocker = isExpired && !isSuperAdmin;
 
-  const marqueeText = settings?.marqueeText || 'Welcome to Omor Auto Corner! Free shipping on orders over $500.';
+  const fallbackBrand = process.env.NEXT_PUBLIC_STORE_NAME || 'Store';
+  const marqueeText = settings?.marqueeText || `Welcome to ${settings?.brandName || fallbackBrand}! Free shipping on orders over $500.`;
   const ui = {
     layout: settings?.uiTemplates?.layout || 'v1',
     navbar: settings?.uiTemplates?.navbar || 'v1',
@@ -36,7 +37,7 @@ export default async function PublicLayout({ children }: { children: React.React
 
   return (
     <>
-      {showBlocker && <SubscriptionBlocker brandName={settings?.brandName || 'Omor Auto Corner'} />}
+      {showBlocker && <SubscriptionBlocker brandName={settings?.brandName || fallbackBrand} />}
       {ui.layout !== 'v2' && ui.layout !== 'aarong' && ui.navbar !== 'aarong' && <Marquee marqueeText={marqueeText} />}
       <Navbar style={ui.navbar} />
       <main className="flex-1">{children}</main>

@@ -176,7 +176,7 @@ export default function FooterV1() {
             <ul className="grid gap-3 text-sm text-muted-foreground">
               <li className="flex items-start justify-center md:justify-start gap-3">
                 <MapPin size={16} className="text-primary mt-0.5 shrink-0" />
-                <span>{settings?.contact?.address || '123 Omor Auto Corner Avenue'}</span>
+                <span>{settings?.contact?.address || `${settings?.brandName || process.env.NEXT_PUBLIC_STORE_NAME || 'Store'} Avenue`}</span>
               </li>
               <li className="flex items-center justify-center md:justify-start gap-3">
                 <Phone size={16} className="text-primary shrink-0" />
@@ -184,7 +184,7 @@ export default function FooterV1() {
               </li>
               <li className="flex items-center justify-center md:justify-start gap-3">
                 <Mail size={16} className="text-primary shrink-0" />
-                <span>{settings?.contact?.email || 'support@omorautocorner.com'}</span>
+                <span>{settings?.contact?.email || process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@bhootbazar.com'}</span>
               </li>
             </ul>
             {hasSocialLinks && (
@@ -226,9 +226,9 @@ export default function FooterV1() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between border-t py-6 sm:flex-row text-sm text-muted-foreground gap-4">
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <p>© {new Date().getFullYear()} {settings?.brandName || 'Omor Auto Corner'}. {t('store.footer.all_rights_reserved')}</p>
+        <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
+          <div>
+            <p>© {new Date().getFullYear()} {settings?.brandName || process.env.NEXT_PUBLIC_STORE_NAME || 'Store'}. {t('store.footer.all_rights_reserved')}</p>
           </div>
 
           <div className="flex items-center gap-6">

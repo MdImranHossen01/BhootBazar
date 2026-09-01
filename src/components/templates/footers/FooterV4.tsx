@@ -37,7 +37,7 @@ export default function FooterV4() {
                <div className="md:col-span-4 space-y-10">
                   <div className="space-y-4">
                      <Link href="/" className="text-5xl font-serif italic tracking-tighter hover:opacity-70 transition-opacity">
-                        Omor Auto Corner
+                        {settings?.brandName || process.env.NEXT_PUBLIC_STORE_NAME || 'Store'}
                      </Link>
                      <div className="flex items-center gap-2 text-primary font-black uppercase tracking-[0.4em] text-[9px]">
                         <Star className="h-3 w-3 fill-current" /> The Boutique Atelier
@@ -129,7 +129,7 @@ export default function FooterV4() {
 
             {/* Elegant Legal Footer */}
             <div className="pt-16 border-t border-neutral-100 dark:border-neutral-900 flex flex-col md:flex-row items-center justify-between gap-8">
-               <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-400">© {currentYear} {settings?.brandName || 'Omor Auto Corner'}. {t('store.footer.all_rights_reserved')}</p>
+               <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-400">© {currentYear} {settings?.brandName || process.env.NEXT_PUBLIC_STORE_NAME || 'Store'}. {t('store.footer.all_rights_reserved')}</p>
                <div className="flex gap-12 text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400">
                   <Link href="/privacy" className="hover:text-primary transition-colors">{t('store.footer.privacy')}</Link>
                   <Link href="/terms" className="hover:text-primary transition-colors">{t('store.footer.terms')}</Link>

@@ -141,7 +141,7 @@ export default function PublicBillPage({ params }: { params: Promise<{ invoiceNo
     );
   }
 
-  const brandName = settings?.brandName || settings?.companyName || process.env.NEXT_PUBLIC_STORE_NAME || 'CDI Door Ind';
+  const brandName = settings?.brandName || settings?.companyName || process.env.NEXT_PUBLIC_STORE_NAME || 'Store';
   const brandPhone = settings?.contact?.phone || settings?.companyPhone || '';
   const brandEmail = settings?.contact?.email || settings?.companyEmail || '';
   const brandAddress = settings?.contact?.address || settings?.companyAddress || '';
