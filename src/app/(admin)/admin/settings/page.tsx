@@ -62,12 +62,12 @@ const FONT_OPTIONS = [
 ];
 
 const settingsSchema = z.object({
-  brandName: z.string().min(2, 'Brand Name is required'),
+  brandName: z.string().min(2, 'Brand Name is required').or(z.literal('')),
   contact: z.object({
-    email: z.string().email('Invalid email'),
-    phone: z.string().min(10, 'Invalid phone number'),
-    address: z.string().min(5, 'Address is required'),
-  }),
+    email: z.string().email('Invalid email').or(z.literal('')).nullish().transform(v => v ?? ''),
+    phone: z.string().nullish().transform(v => v ?? ''),
+    address: z.string().nullish().transform(v => v ?? ''),
+  }).nullish().transform(v => v ?? { email: '', phone: '', address: '' }),
   socialLinks: z.object({
     facebook: z.string().nullish().transform(v => v ?? ''),
     twitter: z.string().nullish().transform(v => v ?? ''),
