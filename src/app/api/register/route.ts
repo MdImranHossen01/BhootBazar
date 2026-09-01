@@ -8,14 +8,14 @@ export async function POST(req: NextRequest) {
   try {
     const { name, email, password, phone, address, division, district, thana } = await req.json();
 
-    if (!password || (!email && !phone)) {
+    if (!email && !phone) {
       return NextResponse.json(
-        { message: 'Password and either email or phone are required.' },
+        { message: 'Either email or mobile number is required.' },
         { status: 400 }
       );
     }
 
-    if (password.length < 6) {
+    if (password && password.length < 6) {
       return NextResponse.json(
         { message: 'Password must be at least 6 characters long.' },
         { status: 400 }
@@ -81,22 +81,27 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const bcrypt = (await import('bcryptjs')).default;
-    const hashedPassword = await bcrypt.hash(password, 12);
+    let hashedPassword = undefined;
+    if (password) {
+      const bcrypt = (await import('bcryptjs')).default;
+      hashedPassword = await bcrypt.hash(password, 12);
+    }
+
+    const addresses = (address || division || district || thana) ? [{
+      street: address || '',
+      division: division || '',
+      state: district || '',
+      city: thana || '',
+      country: 'Bangladesh',
+      isDefault: true
+    }] : [];
 
     const user = await User.create({
       name: name || cleanPhone || normalizedEmail || '',
       email: normalizedEmail,
-      password: hashedPassword,
+      ...(hashedPassword ? { password: hashedPassword } : {}),
       phone: cleanPhone,
-      addresses: [{
-        street: address,
-        division: division,
-        state: district,
-        city: thana,
-        country: 'Bangladesh',
-        isDefault: true
-      }],
+      addresses,
       role: 'user',
     });
 

@@ -40,21 +40,40 @@ import { divisions, bdDivisions, bdLocations } from '@/lib/bd-locations';
 import { Logo } from '@/components/ui/logo';
 
 const registerSchema = z.object({
-  name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
-  email: z.string().email({ message: 'Invalid email address' }),
-  phone: z.string().min(11, { message: 'Enter a valid mobile number' }),
-  address: z.string().min(5, { message: 'Address is required' }),
-  division: z.string().min(1, { message: 'Division is required' }),
-  district: z.string().min(1, { message: 'District is required' }),
-  thana: z.string().min(1, { message: 'Thana is required' }),
-  password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
-  confirmPassword: z.string().min(1, { message: 'Confirm your password' }),
-}).refine((data) => data.password === data.confirmPassword, {
+  name: z.string().optional(),
+  email: z.string().email({ message: 'Invalid email address' }).or(z.literal('')),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+  division: z.string().optional(),
+  district: z.string().optional(),
+  thana: z.string().optional(),
+  password: z.string().optional(),
+  confirmPassword: z.string().optional(),
+}).refine((data) => {
+  return !!data.email || !!data.phone;
+}, {
+  message: "Either Email or Mobile Number is required",
+  path: ["email"],
+}).refine((data) => {
+  if (data.password && data.password.length > 0) {
+    return data.password.length >= 6;
+  }
+  return true;
+}, {
+  message: "Password must be at least 6 characters if provided",
+  path: ["password"],
+}).refine((data) => {
+  if (data.password && data.password.length > 0) {
+    return data.password === data.confirmPassword;
+  }
+  return true;
+}, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
 });
 
-export default function RegisterPage() {  const { t } = useLanguage();
+export default function RegisterPage() {
+  const { t } = useLanguage();
 
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -445,22 +464,13 @@ export default function RegisterPage() {  const { t } = useLanguage();
             <div className="text-center text-sm text-muted-foreground">
               {t('auth.register.already_have') || 'Already have an account?'}{' '}
               <Link href="/login" className="font-semibold text-primary hover:underline underline-offset-4">
-                Log in instead
+                {t('auth.register.login_instead') || 'Log in instead'}
               </Link>
             </div>
           </div>
         </motion.div>
 
-        <div className="mt-auto pt-6 text-center text-xs text-muted-foreground">
-          By clicking register, you agree to our{' '}
-          <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
-            Terms of Service
-          </Link>{' '}
-          and{' '}
-          <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
-            Privacy Policy
-          </Link>.
-        </div>
+
       </div>
     </div>
   );
