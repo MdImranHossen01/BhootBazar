@@ -18,8 +18,9 @@ interface LogoProps {
 }
 
 export function Logo({ className, imageClassName, textClassName, showText = true, onClick, sizes, src, href = "/" }: LogoProps) {
-  const finalBrandName = brandName || process.env.NEXT_PUBLIC_STORE_NAME || "Store";
-  const finalLogoUrl = src || logoUrl || "/logo.webp";
+  const settings = useSettings();
+  const finalBrandName = settings?.brandName || process.env.NEXT_PUBLIC_STORE_NAME || "Store";
+  const finalLogoUrl = src || settings?.logoUrl || "/logo.webp";
 
   return (
     <Link href={href} className={cn("flex items-center gap-1.5 group", className)} onClick={onClick}>
