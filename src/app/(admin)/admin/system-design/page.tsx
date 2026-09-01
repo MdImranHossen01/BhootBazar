@@ -35,7 +35,7 @@ import {
 import { ImageUpload } from '@/components/ui/image-upload';
 import { AdminSystemDesignSkeleton } from '@/components/admin/AdminSkeletons';
 
-const TEMPLATE_OPTIONS = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6'];
+const TEMPLATE_OPTIONS = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'aarong'];
 const THEME_OPTIONS = ['default', 'emerald', 'black', 'caffeine', 'claude', 'elegant', 'marvel', 'material', 'midnight', 'nature', 'perplexity', 'slack', 'summer', 'sunset', 'valorant', 'supabase', 'amber', 'catppuccin', 'clay', 'cyberpunk', 'darkmatter', 'ocean', 'quantum', 't3', 'tangerine', 'vintage', 'green', 'red', 'rose', 'orange', 'blue', 'yellow', 'violet'];
 
 const TEMPLATE_CONFIG = [
@@ -818,11 +818,11 @@ export default function SuperConfigPage() {
                        <SelectValue />
                      </SelectTrigger>
                      <SelectContent className="rounded-xl">
-                       {TEMPLATE_OPTIONS.map(o => (
-                         <SelectItem key={o} value={o} className="rounded-lg">
-                           Version {o.toUpperCase()}
-                         </SelectItem>
-                       ))}
+                        {TEMPLATE_OPTIONS.map(o => (
+                          <SelectItem key={o} value={o} className="rounded-lg">
+                            {o === 'aarong' ? 'Aarong Edition' : `Version ${o.toUpperCase()}`}
+                          </SelectItem>
+                        ))}
                      </SelectContent>
                    </Select>
                  </div>
