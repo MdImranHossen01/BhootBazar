@@ -475,7 +475,7 @@ const CACHE_TTL = 30000; // 30 seconds
           </h2>
           {/* Mobile buttons */}
           <div className="flex items-center gap-2 w-full md:hidden">
-            <Button variant="outline" size="sm" onClick={fetchStats} className="h-9 px-3">
+            <Button variant="outline" size="sm" onClick={() => fetchStats(true)} className="h-9 px-3">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
             </Button>
             {(activeTab !== 'cards' || showroomsList.length > 0) && (
@@ -542,7 +542,7 @@ const CACHE_TTL = 30000; // 30 seconds
             )}
 
             {/* Refresh */}
-            <Button variant="outline" size="sm" onClick={fetchStats} className="h-8 px-3 text-xs font-bold">
+            <Button variant="outline" size="sm" onClick={() => fetchStats(true)} className="h-8 px-3 text-xs font-bold">
               {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : (t("dashboard.refresh") || "Refresh")}
             </Button>
 
