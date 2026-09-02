@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Invalid JSON request body' }, { status: 400 });
     }
 
-    const { name, slug, description, sku, categories, tags, images, attributes, variants, isFeatured, isNewArrival, isPublished, discountRate, wholesalePrice, wholesaleSalePrice, purchasePrice, showroomStocks, brand, showroomPrice, batches } = body;
+    const { name, slug, description, sku, categories, tags, images, attributes, variants, isFeatured, isNewArrival, isPublished, discountRate, wholesalePrice, wholesaleSalePrice, purchasePrice, showroomStocks, brand, showroomPrice, batches, price, salePrice, stock } = body;
     // Coerce variant numeric fields and whitelist properties
     const coercedVariants = (variants || []).map((v: any) => ({
       _id: v._id || v.id,
