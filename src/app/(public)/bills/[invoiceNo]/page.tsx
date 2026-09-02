@@ -34,6 +34,46 @@ export default function PublicBillPage({ params }: { params: Promise<{ invoiceNo
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Manual payment submission state
+  const [manualMethod, setManualMethod] = useState('bKash');
+  const [manualSender, setManualSender] = useState('');
+  const [manualTrxId, setManualTrxId] = useState('');
+  const [submittingManual, setSubmittingManual] = useState(false);
+
+  const handleManualSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!bill) return;
+    if (!manualSender || !manualTrxId) {
+      toast.error('Please provide Sender Number and Transaction ID');
+      return;
+    }
+
+    setSubmittingManual(true);
+    try {
+      const res = await fetch(`/api/public/bills/${encodeURIComponent(invoiceNo)}/submit-payment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          methodName: manualMethod,
+          senderNumber: manualSender,
+          transactionId: manualTrxId.trim().toUpperCase(),
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message || 'Payment info submitted successfully!');
+        setBill(data.bill);
+      } else {
+        toast.error(data.message || 'Failed to submit payment info');
+      }
+    } catch (err) {
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setSubmittingManual(false);
+    }
+  };
+
   useEffect(() => {
     async function loadData() {
       try {
@@ -302,22 +342,116 @@ export default function PublicBillPage({ params }: { params: Promise<{ invoiceNo
             <div className="flex flex-col sm:flex-row justify-between gap-6 pt-4 border-t border-slate-200">
               <div className="flex-1 space-y-2">
                 {!isPaid && (
-                  <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 space-y-2">
+                  <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 space-y-3">
                     <div className="flex items-center gap-2 text-rose-800 font-bold text-sm">
                       <AlertCircle className="h-4 w-4 shrink-0" />
                       Pending Balance: ৳{(bill.currentBillDue || bill.gTotal || 0).toLocaleString()}
                     </div>
-                    <p className="text-xs text-rose-700">
-                      You can conveniently settle your invoice online using credit/debit card or mobile banking.
-                    </p>
-                    <Button 
-                      onClick={handlePayOnline} 
-                      disabled={paying}
-                      className="w-full mt-2 font-bold bg-rose-600 hover:bg-rose-700 text-white gap-2"
-                    >
-                      <CreditCard className="h-4 w-4" />
-                      {paying ? 'Redirecting to Payment...' : 'Pay Online Now'}
-                    </Button>
+
+                    {settings?.paymentConfig?.activeMethod === 'sslcommerz' ? (
+                      <>
+                        <p className="text-xs text-rose-700">
+                          You can conveniently settle your invoice online using credit/debit card or mobile banking.
+                        </p>
+                        <Button 
+                          onClick={handlePayOnline} 
+                          disabled={paying}
+                          className="w-full font-bold bg-rose-600 hover:bg-rose-700 text-white gap-2"
+                        >
+                          <CreditCard className="h-4 w-4" />
+                          {paying ? 'Redirecting to Payment...' : 'Pay Online Now'}
+                        </Button>
+                      </>
+                    ) : (
+                      <div className="space-y-3 pt-1 border-t border-rose-200 text-xs">
+                        <p className="font-semibold text-slate-800">Payment Instructions:</p>
+                        {settings?.manualPaymentConfig?.bkash?.active && settings.manualPaymentConfig.bkash.number && (
+                          <div className="flex justify-between items-center bg-white p-2 rounded border border-slate-200">
+                            <span className="font-bold text-pink-600">bKash (Send Money):</span>
+                            <span className="font-mono font-bold text-slate-900">{settings.manualPaymentConfig.bkash.number}</span>
+                          </div>
+                        )}
+                        {settings?.manualPaymentConfig?.nagad?.active && settings.manualPaymentConfig.nagad.number && (
+                          <div className="flex justify-between items-center bg-white p-2 rounded border border-slate-200">
+                            <span className="font-bold text-orange-600">Nagad:</span>
+                            <span className="font-mono font-bold text-slate-900">{settings.manualPaymentConfig.nagad.number}</span>
+                          </div>
+                        )}
+                        {settings?.manualPaymentConfig?.rocket?.active && settings.manualPaymentConfig.rocket.number && (
+                          <div className="flex justify-between items-center bg-white p-2 rounded border border-slate-200">
+                            <span className="font-bold text-purple-600">Rocket:</span>
+                            <span className="font-mono font-bold text-slate-900">{settings.manualPaymentConfig.rocket.number}</span>
+                          </div>
+                        )}
+                        {settings?.manualPaymentConfig?.bank?.active && settings.manualPaymentConfig.bank.accountNumber && (
+                          <div className="bg-white p-2 rounded border border-slate-200 text-[11px] space-y-0.5">
+                            <div className="font-bold text-slate-900">Bank: {settings.manualPaymentConfig.bank.bankName}</div>
+                            <div>A/C: <span className="font-mono font-bold">{settings.manualPaymentConfig.bank.accountNumber}</span></div>
+                            {settings.manualPaymentConfig.bank.branchName && <div>Branch: {settings.manualPaymentConfig.bank.branchName}</div>}
+                          </div>
+                        )}
+
+                        {/* Customer Manual Payment Submission Form */}
+                        <form onSubmit={handleManualSubmit} className="mt-3 p-3 bg-white rounded-lg border border-slate-200 space-y-2.5">
+                          <div className="font-bold text-slate-900 text-xs flex items-center justify-between">
+                            <span>Submit Payment Info</span>
+                            {bill.manualPaymentDetails?.transactionId && (
+                              <Badge variant="outline" className="text-[10px] bg-yellow-50 text-yellow-800 border-yellow-300">
+                                Submitted / Pending Verify
+                              </Badge>
+                            )}
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-2">
+                            <div>
+                              <label className="text-[10px] font-medium text-slate-500 block mb-1">Payment Method</label>
+                              <select
+                                value={manualMethod}
+                                onChange={(e) => setManualMethod(e.target.value)}
+                                className="w-full h-8 text-xs rounded border bg-white px-2 text-slate-800"
+                              >
+                                <option value="bKash">bKash</option>
+                                <option value="Nagad">Nagad</option>
+                                <option value="Rocket">Rocket</option>
+                                <option value="Bank">Bank Transfer</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="text-[10px] font-medium text-slate-500 block mb-1">Sender Mobile No</label>
+                              <input
+                                type="text"
+                                placeholder="017xxxxxxxx"
+                                value={manualSender}
+                                onChange={(e) => setManualSender(e.target.value)}
+                                className="w-full h-8 text-xs rounded border bg-white px-2 text-slate-800"
+                                required
+                              />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="text-[10px] font-medium text-slate-500 block mb-1">Transaction ID (TrxID)</label>
+                            <input
+                              type="text"
+                              placeholder="e.g. 9J2K8L7M6N"
+                              value={manualTrxId}
+                              onChange={(e) => setManualTrxId(e.target.value)}
+                              className="w-full h-8 text-xs rounded border bg-white px-2 uppercase font-mono text-slate-800"
+                              required
+                            />
+                          </div>
+
+                          <Button
+                            type="submit"
+                            size="sm"
+                            disabled={submittingManual}
+                            className="w-full h-8 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white"
+                          >
+                            {submittingManual ? 'Submitting...' : 'Submit Verification Info'}
+                          </Button>
+                        </form>
+                      </div>
+                    )}
                   </div>
                 )}
 

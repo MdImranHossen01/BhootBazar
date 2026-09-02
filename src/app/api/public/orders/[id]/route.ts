@@ -12,7 +12,22 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
     await connectToDatabase();
 
-    const order = await Order.findById(id).populate('showroom', 'name address phone');
+    let order = null;
+    const mongoose = (await import('mongoose')).default;
+    if (mongoose.isValidObjectId(id)) {
+      order = await Order.findById(id).populate('showroom', 'name address phone');
+    }
+    if (!order) {
+      order = await Order.findOne({
+        $or: [
+          { shortId: id },
+          { shortId: id.toLowerCase() },
+          { shortId: id.toUpperCase() },
+          { orderId: id },
+          { orderId: id.startsWith('#') ? id : `#${id}` }
+        ]
+      }).populate('showroom', 'name address phone');
+    }
     if (!order) {
       return NextResponse.json({ message: 'Order not found' }, { status: 404 });
     }
