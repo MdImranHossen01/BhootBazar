@@ -107,6 +107,29 @@ export async function PUT(
       return NextResponse.json({ message: 'No valid fields provided for update' }, { status: 400 });
     }
 
+    // Fallbacks from variants if main fields are omitted
+    if (safeUpdate.variants && safeUpdate.variants.length > 0) {
+      const firstVariant = safeUpdate.variants[0];
+      if ((!safeUpdate.price || safeUpdate.price <= 0) && firstVariant.price > 0) {
+        safeUpdate.price = firstVariant.price;
+      }
+      if (safeUpdate.salePrice === undefined && firstVariant.salePrice !== undefined) {
+        safeUpdate.salePrice = firstVariant.salePrice;
+      }
+      if ((!safeUpdate.stock || safeUpdate.stock === 0)) {
+        safeUpdate.stock = safeUpdate.variants.reduce((sum: number, v: any) => sum + (v.stock || 0), 0);
+      }
+      if (!safeUpdate.sku && firstVariant.sku) {
+        safeUpdate.sku = firstVariant.sku;
+      }
+      if ((!safeUpdate.images || safeUpdate.images.length === 0)) {
+        const allVariantImages = safeUpdate.variants.flatMap((v: any) => (v.images && v.images.length > 0 ? v.images : (v.image ? [v.image] : []))).filter(Boolean);
+        if (allVariantImages.length > 0) {
+          safeUpdate.images = Array.from(new Set(allVariantImages));
+        }
+      }
+    }
+
     await connectToDatabase();
 
     const query = mongoose.Types.ObjectId.isValid(slug)
