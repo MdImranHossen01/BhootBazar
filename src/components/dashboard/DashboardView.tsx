@@ -311,31 +311,51 @@ const [dateRange, setDateRange] = useState({
     });
   };
 
-  const fetchStats = async () => {
+// Global in-memory cache for dashboard stats (cached by dateRange + showroom)
+const statsCache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_TTL = 30000; // 30 seconds
+
+  const fetchStats = async (force: boolean = false) => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
     const controller = new AbortController();
     abortControllerRef.current = controller;
 
-    setLoading(true);
+    const params: Record<string, string> = {
+      from: debouncedDateRange.from,
+      to: debouncedDateRange.to,
+    };
+    if (selectedShowroom !== 'all') {
+      params.showroom = selectedShowroom;
+    }
+    const query = new URLSearchParams(params).toString();
+    const cacheKey = query;
+
+    // Use cached data immediately if available and fresh
+    const cached = statsCache.get(cacheKey);
+    if (!force && cached && Date.now() - cached.timestamp < CACHE_TTL) {
+      setData(cached.data);
+      if (cached.data.showrooms) {
+        setShowroomsList(cached.data.showrooms);
+      }
+      setLoading(false);
+      return;
+    }
+
+    // Only set loading spinner if no previous data exists to make tab transitions instant
+    if (!data) {
+      setLoading(true);
+    }
     setError(null);
     try {
-      const params: Record<string, string> = {
-        from: debouncedDateRange.from,
-        to: debouncedDateRange.to,
-      };
-      if (selectedShowroom !== 'all') {
-        params.showroom = selectedShowroom;
-      }
-      const query = new URLSearchParams(params).toString();
-
       const response = await fetch(`/api/admin/dashboard/stats?${query}`, {
         signal: controller.signal,
       });
       if (response.ok) {
         const stats = await response.json();
         setData(stats);
+        statsCache.set(cacheKey, { data: stats, timestamp: Date.now() });
         if (stats.showrooms) {
           setShowroomsList(stats.showrooms);
         }
@@ -373,13 +393,14 @@ const [dateRange, setDateRange] = useState({
 
   useEffect(() => {
     const handleRefresh = () => {
-      fetchStats();
+      fetchStats(true);
     };
     window.addEventListener('refresh-dashboard', handleRefresh);
     return () => {
       window.removeEventListener('refresh-dashboard', handleRefresh);
     };
   }, [debouncedDateRange, selectedShowroom]);
+
 
   const total = useMemo(() => {
     if (!data?.chartData) return { revenue: 0, orders: 0, expense: 0, netIncome: 0 };
